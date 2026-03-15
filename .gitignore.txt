@@ -1,0 +1,18 @@
+# Maven
+target/
+*.class
+*.jar
+*.war
+
+# IntelliJ
+.idea/
+*.iml
+*.iws
+*.ipr
+
+# Sensitive config — DO NOT push
+src/main/resources/application.properties
+
+# OS
+.DS_Store
+Thumbs.db
