@@ -1,0 +1,14 @@
+# Dependencies
+node_modules/
+
+# Build
+build/
+
+# Sensitive config — DO NOT push
+.env
+src/config.js
+
+# Create config.example.js instead
+# OS
+.DS_Store
+Thumbs.db
