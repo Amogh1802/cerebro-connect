@@ -34,8 +34,8 @@ public class SecurityConfig {
                     CorsConfiguration config = new CorsConfiguration();
                     config.setAllowedOrigins(List.of(
                             "http://localhost:3000",
-                            "http://192.168.31.17:3000"
-                            "https://cerebro-frontend-five.vercel.app"// local network
+                            "http://192.168.31.17:3000",
+                            "https://cerebro-frontend-five.vercel.app"
                     ));
                     config.setAllowedMethods(List.of("GET", "POST", "PUT", "DELETE", "OPTIONS"));
                     config.setAllowedHeaders(List.of("*"));
@@ -57,7 +57,7 @@ public class SecurityConfig {
                         .authenticationEntryPoint((request, response, authException) -> {
                             response.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
                             response.setContentType("application/json");
-                            response.getWriter().write("{\"error\": \"Unauthorized — please login\"}");
+                            response.getWriter().write("{\"error\": \"Unauthorized - please login\"}");
                         })
                 )
                 .addFilterBefore(jwtAuthFilter, UsernamePasswordAuthenticationFilter.class);
