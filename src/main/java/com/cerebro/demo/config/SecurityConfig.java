@@ -34,7 +34,8 @@ public class SecurityConfig {
                     CorsConfiguration config = new CorsConfiguration();
                     config.setAllowedOrigins(List.of(
                             "http://localhost:3000",
-                            "http://192.168.31.17:3000"  // local network
+                            "http://192.168.31.17:3000"
+                            "https://cerebro-frontend.vercel.app"// local network
                     ));
                     config.setAllowedMethods(List.of("GET", "POST", "PUT", "DELETE", "OPTIONS"));
                     config.setAllowedHeaders(List.of("*"));
