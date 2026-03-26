@@ -84,7 +84,7 @@ public class AuthController {
                 patientDAO.save(patient);
             }
 
-            String token = jwtUtil.generateToken(savedUser);
+            String token = jwtUtil.generateToken(String.valueOf(savedUser));
 
             Map<String, String> response = Map.of(
                     "message", "User registered successfully",
@@ -121,7 +121,7 @@ public class AuthController {
                         .body(Map.of("error", "Invalid credentials"));
             }
 
-            String token = jwtUtil.generateToken(user);
+            String token = jwtUtil.generateToken(String.valueOf(user));
 
             Map<String, String> response = Map.of(
                     "message", "Login successful",
