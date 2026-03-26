@@ -17,8 +17,35 @@ public class EEGRealTimeController {
     private SimpMessagingTemplate messagingTemplate;
 
     @PostMapping("/realtime")
-    public void receiveRealtime(@RequestBody Map<String, Object> data) {
-        // FIXED: explicit cast to String to resolve ambiguity
-        messagingTemplate.convertAndSend((String) "/topic/eeg", (Object) data);
+    public Map<String, Object> receiveRealtimeEEG(@RequestBody Map<String, Object> data) {
+        if (!data.containsKey("timestamp")) {
+            data.put("timestamp", LocalDateTime.now().toString());
+        }
+
+        // Optional compatibility mapping for your frontend cards
+        if (data.containsKey("alpha") && !data.containsKey("rmsAlpha")) {
+            data.put("rmsAlpha", data.get("alpha"));
+        }
+        if (data.containsKey("beta") && !data.containsKey("rmsBeta")) {
+            data.put("rmsBeta", data.get("beta"));
+        }
+        if (data.containsKey("theta") && !data.containsKey("rmsTheta")) {
+            data.put("rmsTheta", data.get("theta"));
+        }
+        if (data.containsKey("delta") && !data.containsKey("rmsDelta")) {
+            data.put("rmsDelta", data.get("delta"));
+        }
+
+        if (!data.containsKey("state")) {
+            data.put("state", "UNKNOWN");
+        }
+
+        messagingTemplate.convertAndSend("/topic/eeg", (Object) data);
+
+        Map<String, Object> response = new HashMap<>();
+        response.put("success", true);
+        response.put("message", "EEG data received");
+        response.put("data", data);
+        return response;
     }
 }
