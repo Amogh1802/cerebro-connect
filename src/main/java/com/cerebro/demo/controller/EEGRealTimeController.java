@@ -40,6 +40,9 @@ public class EEGRealTimeController {
             data.put("state", "UNKNOWN");
         }
 
+        System.out.println("========== PARSED EEG DATA ==========");
+        System.out.println(data);
+
         messagingTemplate.convertAndSend("/topic/eeg", (Object) data);
 
         Map<String, Object> response = new HashMap<>();
