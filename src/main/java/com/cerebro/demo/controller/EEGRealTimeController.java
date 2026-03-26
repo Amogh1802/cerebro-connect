@@ -11,14 +11,14 @@ import java.util.Map;
 
 @RestController
 @RequestMapping("/api/eeg")
-public class EEGRealtimeController {
+public class EEGRealTimeController {
 
     @Autowired
     private SimpMessagingTemplate messagingTemplate;
 
-    // Python bridge POSTs here → broadcasts to all React clients
     @PostMapping("/realtime")
     public void receiveRealtime(@RequestBody Map<String, Object> data) {
-        messagingTemplate.convertAndSend("/topic/eeg", data);
+        // FIXED: explicit cast to String to resolve ambiguity
+        messagingTemplate.convertAndSend((String) "/topic/eeg", (Object) data);
     }
 }
