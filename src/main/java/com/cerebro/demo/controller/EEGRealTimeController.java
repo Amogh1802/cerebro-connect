@@ -45,6 +45,8 @@ public class EEGRealTimeController {
 
         messagingTemplate.convertAndSend("/topic/eeg", (Object) data);
 
+        System.out.println("========== SENT TO /topic/eeg ==========");
+
         Map<String, Object> response = new HashMap<>();
         response.put("success", true);
         response.put("message", "EEG data received");
