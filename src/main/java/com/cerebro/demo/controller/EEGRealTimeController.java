@@ -45,7 +45,6 @@ public class EEGRealTimeController {
             data.put("timestamp", LocalDateTime.now().toString());
         }
 
-        // Optional compatibility mapping for your frontend cards
         if (data.containsKey("alpha") && !data.containsKey("rmsAlpha")) {
             data.put("rmsAlpha", data.get("alpha"));
         }
@@ -58,7 +57,6 @@ public class EEGRealTimeController {
         if (data.containsKey("delta") && !data.containsKey("rmsDelta")) {
             data.put("rmsDelta", data.get("delta"));
         }
-
         if (!data.containsKey("state")) {
             data.put("state", "UNKNOWN");
         }
