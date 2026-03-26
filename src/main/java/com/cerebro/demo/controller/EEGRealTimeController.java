@@ -16,8 +16,30 @@ public class EEGRealTimeController {
     @Autowired
     private SimpMessagingTemplate messagingTemplate;
 
-    @PostMapping("/realtime")
-    public Map<String, Object> receiveRealtimeEEG(@RequestBody Map<String, Object> data) {
+    @Autowired
+    private ObjectMapper objectMapper;
+
+    @PostMapping(value = "/realtime", consumes = "*/*", produces = "application/json")
+    public Map<String, Object> receiveRealtimeEEG(@RequestBody String rawBody) {
+
+        System.out.println("========== LABVIEW RAW BODY RECEIVED ==========");
+        System.out.println(rawBody);
+
+        Map<String, Object> data;
+        try {
+            data = objectMapper.readValue(rawBody, new TypeReference<Map<String, Object>>() {});
+        } catch (Exception e) {
+            System.out.println("========== JSON PARSE ERROR ==========");
+            e.printStackTrace();
+
+            Map<String, Object> error = new HashMap<>();
+            error.put("success", false);
+            error.put("message", "Invalid JSON received");
+            error.put("rawBody", rawBody);
+            error.put("error", e.getMessage());
+            return error;
+        }
+
         if (!data.containsKey("timestamp")) {
             data.put("timestamp", LocalDateTime.now().toString());
         }
