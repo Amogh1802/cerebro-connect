@@ -23,7 +23,7 @@ public class JwtAuthFilter extends OncePerRequestFilter {
     private final UserDetailsService userDetailsService;
     private final JwtUtil jwtUtil;
 
-    public JwtAuthFilter(@Lazy UserDetailsService userDetailsService, JwtUtil jwtUtil) {
+    public JwtAuthFilter(UserDetailsService userDetailsService, JwtUtil jwtUtil) {
         this.userDetailsService = userDetailsService;
         this.jwtUtil = jwtUtil;
     }
@@ -48,12 +48,14 @@ public class JwtAuthFilter extends OncePerRequestFilter {
         System.out.println("Authorization header: " + authHeader);
 
         if (authHeader == null || !authHeader.startsWith("Bearer ")) {
+            System.out.println("No bearer token found");
             filterChain.doFilter(request, response);
             return;
         }
 
         try {
             String jwt = authHeader.substring(7);
+            System.out.println("Raw JWT received");
 
             Claims claims = Jwts.parser()
                     .setSigningKey(jwtUtil.getSecretKeyBytes())
@@ -61,13 +63,16 @@ public class JwtAuthFilter extends OncePerRequestFilter {
                     .getBody();
 
             String email = claims.getSubject();
-
             System.out.println("JWT subject/email: " + email);
 
             if (email != null && SecurityContextHolder.getContext().getAuthentication() == null) {
                 UserDetails userDetails = userDetailsService.loadUserByUsername(email);
+                System.out.println("User loaded from DB: " + userDetails.getUsername());
 
-                if (jwtUtil.validateToken(jwt, userDetails.getUsername())) {
+                boolean isValid = jwtUtil.validateToken(jwt, userDetails.getUsername());
+                System.out.println("JWT valid? " + isValid);
+
+                if (isValid) {
                     UsernamePasswordAuthenticationToken authToken =
                             new UsernamePasswordAuthenticationToken(
                                     userDetails,
@@ -79,7 +84,11 @@ public class JwtAuthFilter extends OncePerRequestFilter {
                     SecurityContextHolder.getContext().setAuthentication(authToken);
 
                     System.out.println("Authentication set for: " + email);
+                } else {
+                    System.out.println("Token validation returned false");
                 }
+            } else {
+                System.out.println("Email null or auth already present");
             }
 
         } catch (Exception e) {

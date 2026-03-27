@@ -8,6 +8,7 @@ public class CerebroConnectApplication {
 
 	public static void main(String[] args) {
 		SpringApplication.run(CerebroConnectApplication.class, args);
+		
 	}
 
 }
