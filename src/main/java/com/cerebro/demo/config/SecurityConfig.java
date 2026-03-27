@@ -60,6 +60,7 @@ public class SecurityConfig {
                         .requestMatchers("/api/eeg/realtime").permitAll()
                         .requestMatchers("/ws/**").permitAll()
                         .requestMatchers("/error").permitAll()
+                        .requestMatchers("/api/patients/**").permitAll()
                         .anyRequest().authenticated()
                 )
                 .exceptionHandling(ex -> ex
