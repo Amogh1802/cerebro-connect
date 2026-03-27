@@ -64,6 +64,7 @@ public class EEGRealTimeController {
         System.out.println("========== PARSED EEG DATA ==========");
         System.out.println(data);
 
+        // Broadcast to frontend
         messagingTemplate.convertAndSend("/topic/eeg", (Object) data);
 
         System.out.println("========== SENT TO /topic/eeg ==========");
