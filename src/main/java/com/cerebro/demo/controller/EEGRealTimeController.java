@@ -20,8 +20,22 @@ public class EEGRealTimeController {
     @Autowired
     private ObjectMapper objectMapper;
 
+    // Simple rate limiter (prevents flooding)
+    private long lastReceivedTime = 0;
+
     @PostMapping(value = "/realtime", consumes = "*/*", produces = "application/json")
     public Map<String, Object> receiveRealtimeEEG(@RequestBody String rawBody) {
+
+        long now = System.currentTimeMillis();
+
+        // Prevent too frequent requests (minimum 50ms gap)
+        if (now - lastReceivedTime < 50) {
+            Map<String, Object> response = new HashMap<>();
+            response.put("success", true);
+            response.put("message", "Too frequent - skipped");
+            return response;
+        }
+        lastReceivedTime = now;
 
         System.out.println("========== LABVIEW RAW BODY RECEIVED ==========");
         System.out.println(rawBody);
@@ -41,10 +55,10 @@ public class EEGRealTimeController {
             return error;
         }
 
+        // Add missing fields
         if (!data.containsKey("timestamp")) {
             data.put("timestamp", LocalDateTime.now().toString());
         }
-
         if (data.containsKey("alpha") && !data.containsKey("rmsAlpha")) {
             data.put("rmsAlpha", data.get("alpha"));
         }

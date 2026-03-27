@@ -7,7 +7,9 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.time.LocalDateTime;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 @RestController
 @RequestMapping("/api/eeg")
@@ -17,13 +19,26 @@ public class EEGSessionController {
     private EEGSessionDAO eegSessionDAO;
 
     @PostMapping("/session")
-    public ResponseEntity<String> startSession(@RequestBody EEGSession session) {
-        session.setStartTime(LocalDateTime.now());
-        eegSessionDAO.save(session);
-        return ResponseEntity.ok("Session started with ID: " + session.getId());
-    }
-    @GetMapping("/sessions/{patientId}")
-    public ResponseEntity<List<EEGSession>> getSessions(@PathVariable Long patientId) {
-        return ResponseEntity.ok(eegSessionDAO.findByPatientId(patientId));
+    public ResponseEntity<Map<String, Object>> startSession(@RequestBody EEGSession session) {
+        try {
+            session.setStartTime(LocalDateTime.now());
+            eegSessionDAO.save(session);
+
+            // Return session with ID
+            Map<String, Object> response = new HashMap<>();
+            response.put("success", true);
+            response.put("message", "Session started");
+            response.put("id", session.getId());
+            response.put("patientId", session.getPatientId());
+
+            System.out.println("✅ Session saved to DB: ID=" + session.getId());
+
+            return ResponseEntity.ok(response);
+        } catch (Exception e) {
+            System.err.println("❌ Failed to save session: " + e.getMessage());
+            e.printStackTrace();
+            return ResponseEntity.internalServerError()
+                    .body(Map.of("success", false, "error", e.getMessage()));
+        }
     }
 }
