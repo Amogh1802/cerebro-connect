@@ -6,7 +6,6 @@ import org.springframework.security.core.userdetails.UserDetails;
 
 import java.util.Collection;
 import java.util.Collections;
-import java.util.List;
 
 public class User implements UserDetails {
 
@@ -17,10 +16,9 @@ public class User implements UserDetails {
     private String name;
     private String profileInfo = "{}";
 
-    // Default constructor
     public User() {}
 
-    // Getters and Setters
+    // Getters & Setters
     public Long getId() { return id; }
     public void setId(Long id) { this.id = id; }
 
@@ -39,7 +37,7 @@ public class User implements UserDetails {
     public String getProfileInfo() { return profileInfo; }
     public void setProfileInfo(String profileInfo) { this.profileInfo = profileInfo; }
 
-    // ─────── UserDetails Implementation ───────
+    // UserDetails methods
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
         return Collections.singletonList(new SimpleGrantedAuthority("ROLE_" + role));
@@ -58,9 +56,4 @@ public class User implements UserDetails {
     public boolean isCredentialsNonExpired() { return true; }
     @Override
     public boolean isEnabled() { return true; }
-
-    @Override
-    public String toString() {
-        return "User{id=" + id + ", role='" + role + "', email='" + email + "', name='" + name + "'}";
-    }
 }
