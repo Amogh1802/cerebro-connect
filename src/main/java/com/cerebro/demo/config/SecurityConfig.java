@@ -2,7 +2,6 @@ package com.cerebro.demo.config;
 
 import com.cerebro.demo.security.JwtAuthFilter;
 import jakarta.servlet.http.HttpServletResponse;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.config.Customizer;
@@ -21,9 +20,9 @@ import java.util.List;
 @EnableWebSecurity
 public class SecurityConfig {
 
-    @Autowired
     private final JwtAuthFilter jwtAuthFilter;
 
+    // Constructor injection (correct way)
     public SecurityConfig(JwtAuthFilter jwtAuthFilter) {
         this.jwtAuthFilter = jwtAuthFilter;
     }
@@ -60,7 +59,7 @@ public class SecurityConfig {
                         .requestMatchers("/api/eeg/realtime").permitAll()
                         .requestMatchers("/ws/**").permitAll()
                         .requestMatchers("/error").permitAll()
-                        .requestMatchers("/api/patients/**").permitAll()
+                        .requestMatchers("/api/patients/**").permitAll()   // This line allows assign patient
                         .anyRequest().authenticated()
                 )
                 .exceptionHandling(ex -> ex
