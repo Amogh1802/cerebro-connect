@@ -61,6 +61,7 @@ public class SecurityConfig {
                         .requestMatchers("/error").permitAll()
                         .requestMatchers("/api/patients/**").permitAll()// This line allows assign patient
                         .requestMatchers("/api/users/**").permitAll()
+                        .requestMatchers("/api/eeg/sessions/**").permitAll()
                         .anyRequest().authenticated()
                 )
                 .exceptionHandling(ex -> ex
