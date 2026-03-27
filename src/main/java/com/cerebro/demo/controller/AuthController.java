@@ -25,7 +25,7 @@ public class AuthController {
     private UserDAO userDAO;
 
     @Autowired
-    private PatientDAO patientDAO;  // ADDED
+    private PatientDAO patientDAO;
 
     @Autowired
     private PasswordEncoder passwordEncoder;
@@ -76,7 +76,7 @@ public class AuthController {
             // Reload to get generated ID
             User savedUser = userDAO.findByEmail(request.getEmail()).orElse(user);
 
-            // ADDED: auto-create patient record on patient registration
+            // Auto-create patient record on patient registration
             if ("PATIENT".equals(savedUser.getRole())) {
                 Patient patient = new Patient();
                 patient.setId(savedUser.getId());
@@ -84,7 +84,8 @@ public class AuthController {
                 patientDAO.save(patient);
             }
 
-            String token = jwtUtil.generateToken(String.valueOf(savedUser));
+            // ✅ CHANGED: Generate token with email only
+            String token = jwtUtil.generateToken(savedUser.getEmail());
 
             Map<String, String> response = Map.of(
                     "message", "User registered successfully",
@@ -121,7 +122,8 @@ public class AuthController {
                         .body(Map.of("error", "Invalid credentials"));
             }
 
-            String token = jwtUtil.generateToken(String.valueOf(user));
+            // ✅ CHANGED: Generate token with email only
+            String token = jwtUtil.generateToken(user.getEmail());
 
             Map<String, String> response = Map.of(
                     "message", "Login successful",
