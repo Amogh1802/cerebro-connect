@@ -17,6 +17,7 @@ public interface EEGSessionDAO {
 
     List<EEGSession> findRecentByPatient(Long patientId, int limit);
 
+
     void updateEndTime(Long sessionId, LocalDateTime endTime);
 
     void delete(Long id);

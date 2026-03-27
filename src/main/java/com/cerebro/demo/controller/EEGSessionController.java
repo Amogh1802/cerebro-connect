@@ -24,7 +24,6 @@ public class EEGSessionController {
             session.setStartTime(LocalDateTime.now());
             eegSessionDAO.save(session);
 
-            // Return session with ID
             Map<String, Object> response = new HashMap<>();
             response.put("success", true);
             response.put("message", "Session started");
@@ -39,6 +38,19 @@ public class EEGSessionController {
             e.printStackTrace();
             return ResponseEntity.internalServerError()
                     .body(Map.of("success", false, "error", e.getMessage()));
+        }
+    }
+
+    @GetMapping("/sessions/{patientId}")
+    public ResponseEntity<List<EEGSession>> getSessionsByPatient(@PathVariable Long patientId) {
+        try {
+            List<EEGSession> sessions = eegSessionDAO.findByPatientId(patientId);
+            System.out.println("✅ Fetched " + sessions.size() + " sessions for patient " + patientId);
+            return ResponseEntity.ok(sessions);
+        } catch (Exception e) {
+            System.err.println("❌ Failed to fetch sessions for patient " + patientId + ": " + e.getMessage());
+            e.printStackTrace();
+            return ResponseEntity.internalServerError().build();
         }
     }
 }
