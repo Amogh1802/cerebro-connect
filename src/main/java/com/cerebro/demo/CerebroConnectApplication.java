@@ -7,13 +7,8 @@ import org.springframework.boot.autoconfigure.SpringBootApplication;
 public class CerebroConnectApplication {
 
 	public static void main(String[] args) {
-		SpringApplication.run(CerebroConnectApplication.class, args);
-
-	}
-
 		SpringApplication.run(
-				CerebroConnectApplication.class,
-				args
+				CerebroConnectApplication.class, args
 		);
 	}
 }
