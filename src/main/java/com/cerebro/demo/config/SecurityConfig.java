@@ -60,6 +60,7 @@ public class SecurityConfig {
                         .requestMatchers("/error").permitAll()
                         .requestMatchers("/api/patients/**").permitAll()
                         .requestMatchers("/api/users/**").permitAll()
+                        .requestMatchers("/api/eeg/current-mode").permitAll()
                         .anyRequest().authenticated()
                 )
                 .exceptionHandling(ex -> ex
