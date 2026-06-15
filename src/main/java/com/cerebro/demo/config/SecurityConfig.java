@@ -61,6 +61,7 @@ public class SecurityConfig {
                         .requestMatchers("/api/patients/**").permitAll()
                         .requestMatchers("/api/users/**").permitAll()
                         .requestMatchers("/api/eeg/current-mode").permitAll()
+                        .requestMatchers("https://cerebro-connect.onrender.com/api/eeg/current-mode").permitAll()
                         .anyRequest().authenticated()
                 )
                 .exceptionHandling(ex -> ex
