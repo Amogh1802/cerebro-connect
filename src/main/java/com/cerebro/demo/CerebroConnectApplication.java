@@ -11,4 +11,9 @@ public class CerebroConnectApplication {
 
 	}
 
+		SpringApplication.run(
+				CerebroConnectApplication.class,
+				args
+		);
+	}
 }
