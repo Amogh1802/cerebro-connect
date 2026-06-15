@@ -15,6 +15,7 @@ import java.util.Map;
 @RestController
 @RequestMapping("/api/eeg")
 public class EEGSessionController {
+    private static String currentMode = "GENERAL";
 
     @Autowired
     private EEGSessionDAO eegSessionDAO;
@@ -27,6 +28,7 @@ public class EEGSessionController {
         try {
             session.setStartTime(LocalDateTime.now());
             eegSessionDAO.save(session);
+            currentMode = session.getMode();
 
             // Broadcast mode to LabVIEW via WebSocket
             Map<String, Object> modePayload = new HashMap<>();
@@ -51,6 +53,15 @@ public class EEGSessionController {
             return ResponseEntity.internalServerError()
                     .body(Map.of("success", false, "error", e.getMessage()));
         }
+    }
+    @GetMapping("/current-mode")
+    public ResponseEntity<Map<String, Object>> getCurrentMode() {
+
+        Map<String, Object> response = new HashMap<>();
+
+        response.put("mode", currentMode);
+
+        return ResponseEntity.ok(response);
     }
 
     @GetMapping("/sessions/{patientId}")
