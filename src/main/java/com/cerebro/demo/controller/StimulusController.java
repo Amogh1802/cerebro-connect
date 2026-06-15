@@ -1,35 +1,42 @@
 package com.cerebro.demo.controller;
 
-import com.cerebro.demo.model.StimulusData;
-import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.http.ResponseEntity;
+
+import java.util.HashMap;
+import java.util.Map;
 
 @RestController
 @RequestMapping("/api/stimulus")
 @CrossOrigin("*")
 public class StimulusController {
 
-    private static StimulusData latestStimulus =
-            new StimulusData("NONE", 0);
+    private static String currentStimulus = "NONE";
+    private static long timestamp = 0;
 
     @PostMapping
-    public ResponseEntity<?> receiveStimulus(
-            @RequestBody StimulusData stimulusData) {
+    public ResponseEntity<?> postStimulus(
+            @RequestBody Map<String,Object> body){
 
-        latestStimulus = stimulusData;
+        currentStimulus = body.get("stimulus").toString();
+        timestamp = System.currentTimeMillis();
 
         System.out.println(
                 "Stimulus Received : "
-                        + stimulusData.getStimulus()
-                        + " Time : "
-                        + stimulusData.getTimestamp()
+                        + currentStimulus
         );
 
         return ResponseEntity.ok().build();
     }
 
     @GetMapping
-    public ResponseEntity<StimulusData> getLatestStimulus() {
-        return ResponseEntity.ok(latestStimulus);
+    public Map<String,Object> getStimulus(){
+
+        Map<String,Object> response = new HashMap<>();
+
+        response.put("stimulus",currentStimulus);
+        response.put("timestamp",timestamp);
+
+        return response;
     }
 }
