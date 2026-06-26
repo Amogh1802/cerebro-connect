@@ -62,6 +62,7 @@ public class SecurityConfig {
                         .requestMatchers("/error").permitAll()
                         .requestMatchers("/api/patients/**").permitAll()
                         .requestMatchers("/api/users/**").permitAll()
+                        .requestMatchers("/api/stimulus").permitAll()
                         .anyRequest().authenticated()
                 )
                 .exceptionHandling(ex -> ex
