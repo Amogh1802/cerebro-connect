@@ -28,7 +28,7 @@ public class P300Controller {
     public ResponseEntity<Map<String, Object>> receiveP300Result(@RequestBody P300Result result) {
         try {
             result.setRecordedAt(LocalDateTime.now());
-            p300ResultDAO.save(result);
+            p300ResultDAO.save(result);   // void; id is set on result via KeyHolder
 
             System.out.println("P300 result saved: patient=" + result.getPatientId()
                     + " amplitude=" + result.getAmplitude()
@@ -52,7 +52,6 @@ public class P300Controller {
         }
     }
 
-    // Fetch all P300 results for a patient (for history view)
     @GetMapping("/patient/{patientId}")
     public ResponseEntity<List<P300Result>> getResultsByPatient(@PathVariable Long patientId) {
         try {
@@ -63,7 +62,6 @@ public class P300Controller {
         }
     }
 
-    // Fetch P300 result(s) for a specific session
     @GetMapping("/session/{sessionId}")
     public ResponseEntity<List<P300Result>> getResultsBySession(@PathVariable Long sessionId) {
         try {

@@ -1,30 +1,22 @@
 package com.cerebro.demo.model;
 
-import jakarta.persistence.*;
 import java.time.LocalDateTime;
 
-@Entity
-@Table(name = "p300_results")
 public class P300Result {
 
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
-
     private Long patientId;
     private Long sessionId;
-
     private String mode;              // e.g. "COMA"
     private Integer trialsAveraged;   // e.g. 10
     private Double amplitude;         // e.g. 1.28
     private Integer latencyMs;        // e.g. 460
     private Boolean detected;         // true if "P300 Response Detected"
-
     private LocalDateTime recordedAt;
 
     public P300Result() {}
 
-    // Getters and setters
+    // Getters & Setters
     public Long getId() { return id; }
     public void setId(Long id) { this.id = id; }
 
@@ -51,4 +43,19 @@ public class P300Result {
 
     public LocalDateTime getRecordedAt() { return recordedAt; }
     public void setRecordedAt(LocalDateTime recordedAt) { this.recordedAt = recordedAt; }
+
+    @Override
+    public String toString() {
+        return "P300Result{" +
+                "id=" + id +
+                ", patientId=" + patientId +
+                ", sessionId=" + sessionId +
+                ", mode='" + mode + '\'' +
+                ", trialsAveraged=" + trialsAveraged +
+                ", amplitude=" + amplitude +
+                ", latencyMs=" + latencyMs +
+                ", detected=" + detected +
+                ", recordedAt=" + recordedAt +
+                '}';
+    }
 }
