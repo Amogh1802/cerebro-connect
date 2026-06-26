@@ -2,7 +2,6 @@ package com.cerebro.demo.config;
 
 import com.cerebro.demo.security.JwtAuthFilter;
 import jakarta.servlet.http.HttpServletResponse;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
@@ -54,15 +53,15 @@ public class SecurityConfig {
                         .requestMatchers("/api/auth/register").permitAll()
                         .requestMatchers("/api/auth/login").permitAll()
                         .requestMatchers("/api/eeg/realtime").permitAll()
-                        .requestMatchers("/api/eeg/session").permitAll()     // ← FIXED
-                        .requestMatchers("/api/eeg/sessions/**").permitAll() // ← FIXED
+                        .requestMatchers("/api/eeg/current-mode").permitAll()
+                        .requestMatchers("/api/eeg/p300/result").permitAll()   // ← ADDED: LabVIEW posts P300 results here
+                        .requestMatchers("/api/eeg/p300/**").permitAll()       // ← ADDED: dashboard reads P300 history
+                        .requestMatchers("/api/eeg/session").permitAll()
+                        .requestMatchers("/api/eeg/sessions/**").permitAll()
                         .requestMatchers("/ws/**").permitAll()
                         .requestMatchers("/error").permitAll()
                         .requestMatchers("/api/patients/**").permitAll()
                         .requestMatchers("/api/users/**").permitAll()
-                        .requestMatchers("/api/eeg/current-mode").permitAll()
-                        .requestMatchers("/api/stimulus").permitAll()
-                        .requestMatchers("/auth/**").permitAll()
                         .anyRequest().authenticated()
                 )
                 .exceptionHandling(ex -> ex
