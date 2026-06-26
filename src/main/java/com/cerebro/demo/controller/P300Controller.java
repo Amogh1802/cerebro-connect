@@ -26,6 +26,7 @@ public class P300Controller {
     // LabVIEW posts the completed P300 result here
     @PostMapping("/result")
     public ResponseEntity<Map<String, Object>> receiveP300Result(@RequestBody P300Result result) {
+        System.out.println("ENTERED P300 API");
         try {
             result.setRecordedAt(LocalDateTime.now());
             p300ResultDAO.save(result);   // void; id is set on result via KeyHolder
