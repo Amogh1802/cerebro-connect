@@ -25,58 +25,30 @@ public class P300Controller {
 
     // LabVIEW posts the completed P300 result here
     @PostMapping("/result")
-    public ResponseEntity<Map<String, Object>> receiveP300Result(
-            @RequestBody P300Result result) {
-
-        System.out.println("====================================");
+    public ResponseEntity<Map<String, Object>> receiveP300Result(@RequestBody P300Result result) {
         System.out.println("ENTERED P300 API");
-        System.out.println("Received object:");
-        System.out.println(result);
-        System.out.println("====================================");
-
         try {
-
-            System.out.println("Setting timestamp...");
             result.setRecordedAt(LocalDateTime.now());
-
-            System.out.println("Saving to database...");
             p300ResultDAO.save(result);
 
-            System.out.println("DATABASE SAVE SUCCESSFUL");
-            System.out.println(
-                    "patient=" + result.getPatientId()
-                            + " amplitude=" + result.getAmplitude()
-                            + " latency=" + result.getLatencyMs()
-                            + " detected=" + result.getDetected()
-            );
+            System.out.println("P300 result saved: patient=" + result.getPatientId()
+                    + " amplitude=" + result.getAmplitude()
+                    + " latency=" + result.getLatencyMs()
+                    + " detected=" + result.getDetected());
 
-            System.out.println("Sending websocket update...");
             messagingTemplate.convertAndSend("/topic/p300", result);
-            System.out.println("Websocket update sent.");
 
             Map<String, Object> response = new HashMap<>();
             response.put("success", true);
             response.put("id", result.getId());
 
-            System.out.println("Returning HTTP response...");
-            System.out.println("====================================");
-
             return ResponseEntity.ok(response);
 
         } catch (Exception e) {
-
-            System.err.println("====================================");
-            System.err.println("P300 API FAILED");
-            System.err.println(e.getClass().getName());
-            System.err.println(e.getMessage());
+            System.err.println("Failed to save P300 result: " + e.getMessage());
             e.printStackTrace();
-            System.err.println("====================================");
-
             return ResponseEntity.internalServerError()
-                    .body(Map.of(
-                            "success", false,
-                            "error", e.getMessage()
-                    ));
+                    .body(Map.of("success", false, "error", e.getMessage()));
         }
     }
 
