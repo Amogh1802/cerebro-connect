@@ -1,5 +1,10 @@
 package com.cerebro.demo.dao;
 
+import org.springframework.jdbc.support.GeneratedKeyHolder;
+import org.springframework.jdbc.support.KeyHolder;
+
+import java.sql.PreparedStatement;
+import java.sql.Statement;
 import com.cerebro.demo.model.EEGSession;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.JdbcTemplate;
@@ -32,18 +37,39 @@ public class EEGSessionDAOImpl implements EEGSessionDAO {
 
     @Override
     public void save(EEGSession session) {
+
         String sql = """
-            INSERT INTO eeg_sessions (patient_id, mode, start_time, notes, raw_data, processed_data)
-            VALUES (?, ?, ?, ?, ?, ?)
-        """;
-        jdbcTemplate.update(sql,
-                session.getPatientId(),
-                session.getMode(),
-                session.getStartTime(),
-                session.getNotes(),       // ADDED
-                session.getRawData(),
-                session.getProcessedData()
-        );
+        INSERT INTO eeg_sessions
+        (patient_id, mode, start_time, notes, raw_data, processed_data)
+        VALUES (?, ?, ?, ?, ?, ?)
+    """;
+
+        KeyHolder keyHolder = new GeneratedKeyHolder();
+
+        jdbcTemplate.update(connection -> {
+
+            PreparedStatement ps = connection.prepareStatement(
+                    sql,
+                    Statement.RETURN_GENERATED_KEYS);
+
+            ps.setLong(1, session.getPatientId());
+            ps.setString(2, session.getMode());
+            ps.setObject(3, session.getStartTime());
+            ps.setString(4, session.getNotes());
+            ps.setString(5, session.getRawData());
+            ps.setString(6, session.getProcessedData());
+
+            return ps;
+
+        }, keyHolder);
+
+        if (keyHolder.getKey() != null) {
+            session.setId(keyHolder.getKey().longValue());
+        }
+
+        System.out.println(
+                "Generated session id = "
+                        + session.getId());
     }
 
     @Override
