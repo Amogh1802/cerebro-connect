@@ -6,6 +6,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.messaging.simp.SimpMessagingTemplate;
 import org.springframework.web.bind.annotation.*;
+import com.cerebro.demo.dao.EEGSessionDAO;
 
 import java.time.LocalDateTime;
 import java.util.HashMap;
@@ -21,6 +22,9 @@ public class DementiaController {
     private DementiaResultDAO dementiaResultDAO;
 
     @Autowired
+    private EEGSessionDAO eegSessionDAO;
+
+    @Autowired
     private SimpMessagingTemplate messagingTemplate;
 
     // LabVIEW posts the completed dementia prediction here
@@ -29,6 +33,17 @@ public class DementiaController {
         try {
             result.setRecordedAt(LocalDateTime.now());
             dementiaResultDAO.save(result);
+            String notes =
+                    "Dementia Probability: "
+                            + result.getProbability()
+                            + "% ("
+                            + result.getPrediction()
+                            + ")";
+
+            eegSessionDAO.updateNotes(
+                    result.getSessionId(),
+                    notes
+            );
 
             System.out.println("Dementia result saved: patient=" + result.getPatientId()
                     + " prediction=" + result.getPrediction()
