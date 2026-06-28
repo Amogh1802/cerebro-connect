@@ -6,6 +6,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.messaging.simp.SimpMessagingTemplate;
 import org.springframework.web.bind.annotation.*;
+import com.cerebro.demo.dao.EEGSessionDAO;
 
 import java.time.LocalDateTime;
 import java.util.HashMap;
@@ -21,6 +22,9 @@ public class P300Controller {
     private P300ResultDAO p300ResultDAO;
 
     @Autowired
+    private EEGSessionDAO eegSessionDAO;
+
+    @Autowired
     private SimpMessagingTemplate messagingTemplate;
 
     // LabVIEW posts the completed P300 result here
@@ -30,6 +34,23 @@ public class P300Controller {
         try {
             result.setRecordedAt(LocalDateTime.now());
             p300ResultDAO.save(result);
+            String notes;
+
+            if(result.getDetected()) {
+
+                notes =
+                        "P300 Detected";
+
+            } else {
+
+                notes =
+                        "No P300 Detected";
+            }
+
+            eegSessionDAO.updateNotes(
+                    result.getSessionId(),
+                    notes
+            );
 
             System.out.println("P300 result saved: patient=" + result.getPatientId()
                     + " amplitude=" + result.getAmplitude()
