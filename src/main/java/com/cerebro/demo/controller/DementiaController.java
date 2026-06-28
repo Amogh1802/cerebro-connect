@@ -34,7 +34,7 @@ public class DementiaController {
             result.setRecordedAt(LocalDateTime.now());
             dementiaResultDAO.save(result);
             String notes =
-                    "Dementia Probability: "
+                    " Probability: "
                             + result.getProbability()
                             + "% ("
                             + result.getPrediction()
