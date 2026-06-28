@@ -54,16 +54,17 @@ public class SecurityConfig {
                         .requestMatchers("/api/auth/login").permitAll()
                         .requestMatchers("/api/eeg/realtime").permitAll()
                         .requestMatchers("/api/eeg/current-mode").permitAll()
-                        .requestMatchers("/api/eeg/p300/result").permitAll()   // ← ADDED: LabVIEW posts P300 results here
-                        .requestMatchers("/api/eeg/p300/**").permitAll()       // ← ADDED: dashboard reads P300 history
+                        .requestMatchers("/api/eeg/p300/result").permitAll()
+                        .requestMatchers("/api/eeg/p300/**").permitAll()
+                        .requestMatchers("/api/eeg/dementia/result").permitAll()   // ← ADDED: LabVIEW posts dementia results
+                        .requestMatchers("/api/eeg/dementia/**").permitAll()       // ← ADDED: dashboard reads dementia history
                         .requestMatchers("/api/eeg/session").permitAll()
                         .requestMatchers("/api/eeg/sessions/**").permitAll()
+                        .requestMatchers("/api/stimulus").permitAll()
                         .requestMatchers("/ws/**").permitAll()
                         .requestMatchers("/error").permitAll()
                         .requestMatchers("/api/patients/**").permitAll()
                         .requestMatchers("/api/users/**").permitAll()
-                        .requestMatchers("/api/stimulus").permitAll()
-                        .requestMatchers("/topic/**").permitAll()
                         .anyRequest().authenticated()
                 )
                 .exceptionHandling(ex -> ex
