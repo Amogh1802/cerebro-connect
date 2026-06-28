@@ -108,4 +108,20 @@ public class EEGSessionDAOImpl implements EEGSessionDAO {
         String sql = "DELETE FROM eeg_sessions WHERE id = ?";
         jdbcTemplate.update(sql, id);
     }
+    @Override
+    public void updateNotes(
+            Long sessionId,
+            String notes) {
+
+        String sql =
+                "UPDATE eeg_sessions " +
+                        "SET notes=? " +
+                        "WHERE id=?";
+
+        jdbcTemplate.update(
+                sql,
+                notes,
+                sessionId
+        );
+    }
 }

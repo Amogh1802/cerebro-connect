@@ -21,4 +21,9 @@ public interface EEGSessionDAO {
     void updateEndTime(Long sessionId, LocalDateTime endTime);
 
     void delete(Long id);
+
+    void updateNotes(
+            Long sessionId,
+            String notes
+    );
 }
